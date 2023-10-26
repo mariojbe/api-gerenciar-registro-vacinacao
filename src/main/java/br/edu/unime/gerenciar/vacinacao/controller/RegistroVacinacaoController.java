@@ -1,14 +1,19 @@
 package br.edu.unime.gerenciar.vacinacao.controller;
 
+import br.edu.unime.gerenciar.vacinacao.dto.RegistroVacinacaoDTO;
 import br.edu.unime.gerenciar.vacinacao.entity.Paciente;
+import br.edu.unime.gerenciar.vacinacao.entity.RegistroVacinacao;
 import br.edu.unime.gerenciar.vacinacao.entity.Vacina;
 import br.edu.unime.gerenciar.vacinacao.httpClient.PacienteHttpClient;
 import br.edu.unime.gerenciar.vacinacao.httpClient.VacinaHttpClient;
+import br.edu.unime.gerenciar.vacinacao.service.RegistroVacinacaoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
@@ -20,6 +25,9 @@ public class RegistroVacinacaoController {
 
     @Autowired
     PacienteHttpClient pacienteHttpClient;
+
+    @Autowired
+    RegistroVacinacaoService registroVacinacaoService;
 
     // http://localhost:8080/api/vacinacao/vacina
     @GetMapping("/vacina")
@@ -37,5 +45,58 @@ public class RegistroVacinacaoController {
         return paciente;
     }
 
+    @GetMapping
+    public List<RegistroVacinacao> obterTodos() {
+        return registroVacinacaoService.obterTodos();
+    }
+
+    @GetMapping("/obter/{id}")
+    public ResponseEntity<RegistroVacinacao> obterRegistroVacinacaoPorId(@PathVariable String id) {
+        Optional<RegistroVacinacao> registroVacinacao = registroVacinacaoService.findById(id);
+
+        if (registroVacinacao.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok().body(registroVacinacao.get());
+    }
+
+    @PostMapping("/cadastrar")
+    public ResponseEntity<RegistroVacinacao> inserir(@RequestBody @Valid RegistroVacinacaoDTO registroVacinacaoDTO) {
+        RegistroVacinacao registroVacinacao = new RegistroVacinacao(registroVacinacaoDTO);
+
+        Vacina vacina = vacinaHttpClient.obterVacinaPorId(registroVacinacaoDTO.getIdVacina());
+
+        registroVacinacao.setIdVacina(String.valueOf(vacina.getId()));
+
+        registroVacinacaoService.inserir(registroVacinacao);
+
+        return ResponseEntity.created(null).body(registroVacinacao);
+    }
+
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<RegistroVacinacao> atualizarPorId(@RequestBody RegistroVacinacao novosDadosDoPRegistroVacinacao, @PathVariable String id) {
+        Optional<RegistroVacinacao> registroVacinacao = registroVacinacaoService.findById(id);
+
+        if (registroVacinacao.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        RegistroVacinacao responseRegistroVacinacao = registroVacinacaoService.atualizarPorId(id, novosDadosDoPRegistroVacinacao);
+        return ResponseEntity.ok().body(responseRegistroVacinacao);
+    }
+
+    @DeleteMapping("/remover/{id}")
+    public ResponseEntity<RegistroVacinacao> remover(@PathVariable String id) {
+        Optional<RegistroVacinacao> registroVacinacao = registroVacinacaoService.findById(id);
+
+        if (registroVacinacao.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        registroVacinacaoService.remove(id);
+
+        return ResponseEntity.ok().body(null);
+    }
 
 }
