@@ -2,12 +2,14 @@ package br.edu.unime.gerenciar.vacinacao.controller;
 
 import br.edu.unime.gerenciar.vacinacao.dto.RegistroVacinacaoDTO;
 import br.edu.unime.gerenciar.vacinacao.entity.Paciente;
+import br.edu.unime.gerenciar.vacinacao.entity.ProfisionalSaude;
 import br.edu.unime.gerenciar.vacinacao.entity.RegistroVacinacao;
 import br.edu.unime.gerenciar.vacinacao.entity.Vacina;
 import br.edu.unime.gerenciar.vacinacao.httpClient.PacienteHttpClient;
 import br.edu.unime.gerenciar.vacinacao.httpClient.VacinaHttpClient;
 import br.edu.unime.gerenciar.vacinacao.service.RegistroVacinacaoService;
 import jakarta.validation.Valid;
+import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,9 +67,11 @@ public class RegistroVacinacaoController {
     public ResponseEntity<RegistroVacinacao> inserir(@RequestBody @Valid RegistroVacinacaoDTO registroVacinacaoDTO) {
         RegistroVacinacao registroVacinacao = new RegistroVacinacao(registroVacinacaoDTO);
 
+        Paciente paciente = pacienteHttpClient.obterPacientePorId(registroVacinacaoDTO.getIdPaciente());
         Vacina vacina = vacinaHttpClient.obterVacinaPorId(registroVacinacaoDTO.getIdVacina());
 
-        registroVacinacao.setIdVacina(String.valueOf(vacina.getId()));
+        registroVacinacao.setIdPaciente(paciente.getId());
+        registroVacinacao.setIdVacina(vacina.getId());
 
         registroVacinacaoService.inserir(registroVacinacao);
 

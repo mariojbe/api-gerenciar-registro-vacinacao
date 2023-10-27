@@ -20,13 +20,14 @@ public class RegistroVacinacao {
     private String IdPaciente;
     private String IdVacina;
     private int IdDose;
-    private String IdProfissionalSaude;
+
+    private ProfisionalSaude profisionalSaude;
+    //private String IdProfissionalSaude;
 
     public RegistroVacinacao(RegistroVacinacaoDTO registroVacinacaoDTO) {
         setDataVacinacao(registroVacinacaoDTO.getDataVacinacao());
         setIdPaciente(registroVacinacaoDTO.getIdPaciente());
         setIdVacina(registroVacinacaoDTO.getIdPaciente());
         setIdDose(registroVacinacaoDTO.getIdDose());
-        setIdProfissionalSaude(registroVacinacaoDTO.getIdProfissionalSaude());
     }
 }

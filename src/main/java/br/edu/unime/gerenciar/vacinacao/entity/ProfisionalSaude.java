@@ -20,7 +20,7 @@ public class ProfisionalSaude {
     @Size(min = 3, max = 100, message = "o nome deve ter entre 3 e 100 digitos!")
     private String Nome;
 
+    //@Indexed(unique = true)
     @CPF
-    @Indexed(unique = true)
     private String Cpf;
 }
