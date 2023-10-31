@@ -32,7 +32,7 @@ public class RegistroVacinacaoService {
             novoPaciente.setIdPaciente(novosDadosDoRegistroVacinacao.getIdPaciente());
             novoPaciente.setIdVacina(novosDadosDoRegistroVacinacao.getIdVacina());
             novoPaciente.setIdVacina(novosDadosDoRegistroVacinacao.getIdVacina());
-            novoPaciente.setProfisionalSaude(novosDadosDoRegistroVacinacao.getProfisionalSaude());
+            //novoPaciente.setProfissionalSaude(novosDadosDoRegistroVacinacao.getProfissionalSaude());
             registroVacinacaoRepository.save(novoPaciente);
             return novoPaciente;
         }

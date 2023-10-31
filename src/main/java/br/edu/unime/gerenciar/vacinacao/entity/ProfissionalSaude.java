@@ -7,12 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @AllArgsConstructor //cria construtor com todos argumentos
 @NoArgsConstructor //cria construtor sem argumentos
-public class ProfisionalSaude {
+@Document(collection = "ProfissionalSaude")
+public class ProfissionalSaude {
     @Id
     private String id;
 

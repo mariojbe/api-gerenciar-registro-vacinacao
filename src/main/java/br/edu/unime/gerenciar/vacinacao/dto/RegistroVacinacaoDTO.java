@@ -1,6 +1,5 @@
 package br.edu.unime.gerenciar.vacinacao.dto;
 
-import br.edu.unime.gerenciar.vacinacao.entity.ProfisionalSaude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,8 +17,8 @@ public class RegistroVacinacaoDTO {
     private String IdVacina;
     private int IdDose;
 
-    @CPF
-    private String cpfProfisionalSaude;
+    //@CPF
+    //private String cpfProfisionalSaude;
 
     //private String IdProfissionalSaude;
 }
