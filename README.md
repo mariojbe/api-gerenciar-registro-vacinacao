@@ -17,37 +17,41 @@ no 2º semestre de 2023.
 ## Índice de Conteúdo
 
 - [Instalação](#instalação)
-- [Configuration](#configuration)
+- [Como Usar](#como-usar)
 - [API Endpoints](#api-endpoints)
 - [Base de Dados](#base-de-dados)
 
 ## Instalação
 
-1. Clone the repository:
+1. Clone o repositório:
 
 ```bash
 $ git clone https://github.com/mariojbe/api-gerenciar-registro-vacinacao.git
 ```
 
-2. Install dependencies with Maven
+2. Instale as dependências com o Maven
 
-## Usage
+## Como Usar
 
-1. Start the application with Maven
-2. The API will be accessible at http://localhost:8080
+1. Inicie o aplicativo com Maven
+2. A API estará acessível em http://localhost:8080
 
 ## API Endpoints
 
-The API provides the following endpoints:
+A API fornece os seguintes endpoints:
 
 ```markdown
-GET /product - Retrieve a list of all data.
+GET /api/vacinacao - Recuperar uma lista de todos os dados de vacinação.
 
-POST /product - Register a new data.
+GET /api/vacinacao/obter/{id} - Retorna dados de uma vacinação através do id.
 
-PUT /product - Alter data.
+POST /api/vacinacao/cadastrar - Registra uma nova vacinação.
 
-DELETE /product/{id} - Inactivate data.
+PUT /api/vacinacao/editar/{id} - Atualiza dados da vacinação.
+
+DELETE /api/vacinacao/remover/{id} - Excluir um registro de vacinação.
+
+GET /api/vacinacao - Recuperar uma lista de todos os dados de vacinação.
 ```
 
 ## Base de Dados
@@ -56,6 +60,8 @@ O projeto usa MongoDB como banco de dados.
 
 Para instalar o MongoDB localmente [clique aqui](https://www.mongodb.com/try/download/community).
 
+OU
+
 Experimente um cluster gratuito e altamente disponível de 512
-MB.[clique aqui](https://www.mongodb.com/cloud/atlas/register).
+MB. [clique aqui](https://www.mongodb.com/cloud/atlas/register).
 
