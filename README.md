@@ -9,7 +9,7 @@ This project was build during a [live in my Youtube Channel](https://www.youtube
 
 ## Índice de Conteúdo
 
-- [Installation](#installation)
+- [Instalação](#instalação)
 - [Configuration](#configuration)
 - [API Endpoints](#api-endpoints)
 - [Database](#database)
