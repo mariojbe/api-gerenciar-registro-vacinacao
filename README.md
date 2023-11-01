@@ -2,17 +2,24 @@
 
 API 3 Gerenciar Registro de Vacinação
 
-This repository contains a simple CRUD project built using Java Spring. The aim of this repository is to practice and
-share how you can build all CRUD Methods using Java Spring.
+Este repositório contém um projeto API REST simples construído usando Java Spring & MongoDB.
+O objetivo deste repositório é gerenciar o registro de vacinação através de CRUD Java com o seguintes dados:
 
-This project was build during a [live in my Youtube Channel](https://www.youtube.com/watch?v=tP6wtEaCnSI).
+• Identificação do Paciente
+• Identificação da Vacina
+• Identificação da Dose
+• Identificação do Profissional de Saúde (Nome e CPF)
+
+Este projeto foi construído durante a disciplina de Programação para Web II
+do curso de Bacharelado em Sitemas de Informação da UNIME(União Metropolitana de Educação e Cultura)
+no 2º semestre de 2023.
 
 ## Índice de Conteúdo
 
 - [Instalação](#instalação)
 - [Configuration](#configuration)
 - [API Endpoints](#api-endpoints)
-- [Database](#database)
+- [Base de Dados](#base-de-dados)
 
 ## Instalação
 
@@ -43,22 +50,12 @@ PUT /product - Alter data.
 DELETE /product/{id} - Inactivate data.
 ```
 
-## Database
+## Base de Dados
 
-The project uses PostgresSQL as the database. The necessary database migrations are managed using Flyway.
+O projeto usa MongoDB como banco de dados.
 
-To install PostgresSQL locally you can [click here](https://www.postgresql.org/download/).
+Para instalar o MongoDB localmente [clique aqui](https://www.mongodb.com/try/download/community).
 
-## Docker
+Experimente um cluster gratuito e altamente disponível de 512
+MB.[clique aqui](https://www.mongodb.com/cloud/atlas/register).
 
-You can run this project with Docker by running the following command:
-
-```bash
-$ docker-compose up
-```
-
-Run the application and access http://localhost:15432
-
-Enter the email and password configured in [Docker file](./docker-compose.yml).
-
-To install Docker locally you can [click here](https://www.docker.com/products/docker-desktop/).
