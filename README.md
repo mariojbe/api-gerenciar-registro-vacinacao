@@ -44,20 +44,20 @@ $ git clone https://github.com/mariojbe/api-gerenciar-registro-vacinacao.git
 A API fornece os seguintes endpoints:
 
 ```markdown
-GET /api/vacinacao - Retorna uma lista de todos os dados de registro de vacinação.
+GET /api/vacinacao - Retorna uma lista de todos os dados do registro de vacinação.
 
-GET /api/vacinacao/obter/{id} - Retorna dados de uma vacinação através do id.
+GET /api/vacinacao/obter/{id} - Retorna dados de apenas um registro de uma vacinação através do id.
 
 POST /api/vacinacao/cadastrar - Registra uma nova vacinação.
 
-PUT /api/vacinacao/editar/{id} - Atualiza dados da vacinação.
+PUT /api/vacinacao/editar/{id} - Atualiza os dados de registro de uma vacinação.
 
-DELETE /api/vacinacao/remover/{id} - Excluir um registro de vacinação.
+DELETE /api/vacinacao/remover/{id} - Exclui um registro de vacinação.
 ```
 
 ## Base de Dados
 
-O projeto usa MongoDB como banco de dados.
+O projeto usa o MongoDB como banco de dados.
 
 Para instalar o MongoDB localmente [clique aqui](https://www.mongodb.com/try/download/community).
 
