@@ -22,7 +22,6 @@ public class RegistroVacinacao {
     private int IdDose;
 
     private ProfissionalSaude profissionalSaude;
-    //private String IdProfissionalSaude;
 
     public RegistroVacinacao(RegistroVacinacaoDTO registroVacinacaoDTO) {
         setDataVacinacao(registroVacinacaoDTO.getDataVacinacao());

@@ -25,7 +25,6 @@ public class Paciente {
     private String sobrenome;
 
     @CPF
-    @Indexed(unique = true)
     private String cpf;
 
     @NotNull
