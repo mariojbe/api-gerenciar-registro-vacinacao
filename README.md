@@ -41,7 +41,7 @@ $ git clone https://github.com/mariojbe/api-gerenciar-registro-vacinacao.git
 A API fornece os seguintes endpoints:
 
 ```markdown
-GET /api/vacinacao - Recuperar uma lista de todos os dados de vacinação.
+GET /api/vacinacao - Retorna uma lista de todos os dados de registro de vacinação.
 
 GET /api/vacinacao/obter/{id} - Retorna dados de uma vacinação através do id.
 
@@ -50,8 +50,6 @@ POST /api/vacinacao/cadastrar - Registra uma nova vacinação.
 PUT /api/vacinacao/editar/{id} - Atualiza dados da vacinação.
 
 DELETE /api/vacinacao/remover/{id} - Excluir um registro de vacinação.
-
-GET /api/vacinacao - Recuperar uma lista de todos os dados de vacinação.
 ```
 
 ## Base de Dados
