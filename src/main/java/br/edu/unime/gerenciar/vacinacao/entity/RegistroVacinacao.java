@@ -21,7 +21,7 @@ public class RegistroVacinacao {
     private String IdVacina;
     private int IdDose;
 
-    //private ProfissionalSaude profissionalSaude;
+    private ProfissionalSaude profissionalSaude;
     //private String IdProfissionalSaude;
 
     public RegistroVacinacao(RegistroVacinacaoDTO registroVacinacaoDTO) {

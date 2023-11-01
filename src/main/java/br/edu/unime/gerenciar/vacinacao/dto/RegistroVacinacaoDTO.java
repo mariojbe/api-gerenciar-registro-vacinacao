@@ -17,8 +17,8 @@ public class RegistroVacinacaoDTO {
     private String IdVacina;
     private int IdDose;
 
-    //@CPF
-    //private String cpfProfisionalSaude;
+    @CPF
+    private String cpfProfisionalSaude;
 
     //private String IdProfissionalSaude;
 }

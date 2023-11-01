@@ -19,6 +19,16 @@ public class ProfissionalSaudeService {
         return profissionalSaudeRepository.findAll();
     }
 
+    public ProfissionalSaude obterProfissionalSaudePorCPF(String cpf) throws Exception {
+        ProfissionalSaude profissionalSaude = profissionalSaudeRepository.findByCpf(cpf);
+
+        if (profissionalSaude == null) {
+            throw new Exception("Profissional de Saúde não encontrado!");
+        }
+
+        return profissionalSaude;
+    }
+
     public void inserir(ProfissionalSaude profissionalSaude) {
         profissionalSaudeRepository.insert(profissionalSaude);
     }
@@ -27,11 +37,11 @@ public class ProfissionalSaudeService {
         Optional<ProfissionalSaude> profissionalSaude = findById(id);
 
         if (profissionalSaude.isPresent()) {
-            ProfissionalSaude novoPaciente = profissionalSaude.get();
-            novoPaciente.setNome(novosDadosDoProfissionalSaude.getNome());
-            novoPaciente.setCpf(novosDadosDoProfissionalSaude.getCpf());
-            profissionalSaudeRepository.save(novoPaciente);
-            return novoPaciente;
+            ProfissionalSaude novoProfissionalSaude = profissionalSaude.get();
+            novoProfissionalSaude.setNome(novosDadosDoProfissionalSaude.getNome());
+            novoProfissionalSaude.setCpf(novosDadosDoProfissionalSaude.getCpf());
+            profissionalSaudeRepository.save(novoProfissionalSaude);
+            return novoProfissionalSaude;
         }
         return null;
 
@@ -44,9 +54,9 @@ public class ProfissionalSaudeService {
     }
 
     public Optional<ProfissionalSaude> findById(String id) {
-        Optional<ProfissionalSaude> paciente = profissionalSaudeRepository.findById(id);
+        Optional<ProfissionalSaude> profissionalSaude = profissionalSaudeRepository.findById(id);
 
-        ProfissionalSaude entity = paciente.orElseThrow(() -> new EntityNotFoundException("Paciente Não Lacalizado!"));
+        ProfissionalSaude entity = profissionalSaude.orElseThrow(() -> new EntityNotFoundException("Paciente Não Lacalizado!"));
 
         return Optional.ofNullable(entity);
     }

@@ -2,10 +2,12 @@ package br.edu.unime.gerenciar.vacinacao.controller;
 
 import br.edu.unime.gerenciar.vacinacao.dto.RegistroVacinacaoDTO;
 import br.edu.unime.gerenciar.vacinacao.entity.Paciente;
+import br.edu.unime.gerenciar.vacinacao.entity.ProfissionalSaude;
 import br.edu.unime.gerenciar.vacinacao.entity.RegistroVacinacao;
 import br.edu.unime.gerenciar.vacinacao.entity.Vacina;
 import br.edu.unime.gerenciar.vacinacao.httpClient.PacienteHttpClient;
 import br.edu.unime.gerenciar.vacinacao.httpClient.VacinaHttpClient;
+import br.edu.unime.gerenciar.vacinacao.service.ProfissionalSaudeService;
 import br.edu.unime.gerenciar.vacinacao.service.RegistroVacinacaoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class RegistroVacinacaoController {
 
     @Autowired
     RegistroVacinacaoService registroVacinacaoService;
+
+    @Autowired
+    ProfissionalSaudeService profissionalSaudeService;
 
     // http://localhost:8080/api/vacinacao/vacina
     @GetMapping("/vacina")
@@ -62,14 +67,16 @@ public class RegistroVacinacaoController {
     }
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<RegistroVacinacao> inserir(@RequestBody @Valid RegistroVacinacaoDTO registroVacinacaoDTO) {
+    public ResponseEntity<RegistroVacinacao> inserir(@RequestBody @Valid RegistroVacinacaoDTO registroVacinacaoDTO) throws Exception {
         RegistroVacinacao registroVacinacao = new RegistroVacinacao(registroVacinacaoDTO);
 
         Paciente paciente = pacienteHttpClient.obterPacientePorId(registroVacinacaoDTO.getIdPaciente());
         Vacina vacina = vacinaHttpClient.obterVacinaPorId(registroVacinacaoDTO.getIdVacina());
+        ProfissionalSaude profissionalSaude = profissionalSaudeService.obterProfissionalSaudePorCPF(registroVacinacaoDTO.getCpfProfisionalSaude());
 
         registroVacinacao.setIdPaciente(paciente.getId());
         registroVacinacao.setIdVacina(vacina.getId());
+        registroVacinacao.setProfissionalSaude(profissionalSaude);
 
         registroVacinacaoService.inserir(registroVacinacao);
 

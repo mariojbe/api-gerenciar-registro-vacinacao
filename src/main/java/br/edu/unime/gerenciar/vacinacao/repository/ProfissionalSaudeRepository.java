@@ -9,4 +9,8 @@ public interface ProfissionalSaudeRepository extends MongoRepository<Profissiona
 
     public Optional<ProfissionalSaude> findById(String id);
 
+    //public Optional<ProfissionalSaude> findByCpf(String cpf);
+
+    ProfissionalSaude findByCpf(String cpf);
+
 }
