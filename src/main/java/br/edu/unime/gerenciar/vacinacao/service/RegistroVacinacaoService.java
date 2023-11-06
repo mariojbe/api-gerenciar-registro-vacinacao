@@ -55,11 +55,11 @@ public class RegistroVacinacaoService {
     }
 
     public List<RegistroVacinacao> findByIdPaciente(String idPaciente) {
-        List<RegistroVacinacao> registroVacinacao = registroVacinacaoRepository.findByIdPaciente(idPaciente);
-
-        /*RegistroVacinacao entity = registroVacinacao.set(() -> new EntityNotFoundException("Paciente Não Lacalizado!"));
-
-        return Optional.ofNullable(entity);*/
+        try {
+            List<RegistroVacinacao> registroVacinacao = registroVacinacaoRepository.findByIdPaciente(idPaciente);
+        } catch (Exception e) {
+            throw new ClassCastException("Registro Não Lacalizado!");
+        }
         return registroVacinacaoRepository.findByIdPaciente(idPaciente);
     }
 
