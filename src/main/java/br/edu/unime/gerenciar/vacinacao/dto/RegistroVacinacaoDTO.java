@@ -12,13 +12,11 @@ import java.util.Date;
 @NoArgsConstructor //cria construtor sem argumentos
 public class RegistroVacinacaoDTO {
 
-    private Date DataVacinacao;
-    private String IdPaciente;
-    private String IdVacina;
-    private int IdDose;
+    private Date dataVacinacao;
+    private String idPaciente;
+    private String idVacina;
+    private int Dose;
 
     @CPF
     private String cpfProfisionalSaude;
-
-    //private String IdProfissionalSaude;
 }

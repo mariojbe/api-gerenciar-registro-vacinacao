@@ -47,11 +47,20 @@ public class RegistroVacinacaoService {
     }
 
     public Optional<RegistroVacinacao> findById(String id) {
-        Optional<RegistroVacinacao> paciente = registroVacinacaoRepository.findById(id);
+        Optional<RegistroVacinacao> registroVacinacao = registroVacinacaoRepository.findById(id);
 
-        RegistroVacinacao entity = paciente.orElseThrow(() -> new EntityNotFoundException("Paciente Não Lacalizado!"));
+        RegistroVacinacao entity = registroVacinacao.orElseThrow(() -> new EntityNotFoundException("Registro Não Lacalizado!"));
 
         return Optional.ofNullable(entity);
+    }
+
+    public List<RegistroVacinacao> findByIdPaciente(String idPaciente) {
+        List<RegistroVacinacao> registroVacinacao = registroVacinacaoRepository.findByIdPaciente(idPaciente);
+
+        /*RegistroVacinacao entity = registroVacinacao.set(() -> new EntityNotFoundException("Paciente Não Lacalizado!"));
+
+        return Optional.ofNullable(entity);*/
+        return registroVacinacaoRepository.findByIdPaciente(idPaciente);
     }
 
 

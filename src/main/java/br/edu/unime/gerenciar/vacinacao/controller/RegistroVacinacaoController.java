@@ -66,6 +66,18 @@ public class RegistroVacinacaoController {
         return ResponseEntity.ok().body(registroVacinacao.get());
     }
 
+    @GetMapping("/obter/paciente/{idPaciente}")
+    public List<RegistroVacinacao> obterRegistroVacinacaoPorIdPaciente(@PathVariable String idPaciente) {
+        List<RegistroVacinacao> registroVacinacao = registroVacinacaoService.findByIdPaciente(idPaciente);
+
+        if (registroVacinacao.isEmpty()) {
+            return (List<RegistroVacinacao>) ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok().body(registroVacinacao).getBody();
+        //return registroVacinacao;
+    }
+
     @PostMapping("/cadastrar")
     public ResponseEntity<RegistroVacinacao> inserir(@RequestBody @Valid RegistroVacinacaoDTO registroVacinacaoDTO) throws Exception {
         RegistroVacinacao registroVacinacao = new RegistroVacinacao(registroVacinacaoDTO);

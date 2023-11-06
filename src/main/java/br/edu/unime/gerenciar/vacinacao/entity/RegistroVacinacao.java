@@ -16,10 +16,10 @@ import java.util.Date;
 public class RegistroVacinacao {
     @Id
     private String id;
-    private Date DataVacinacao;
-    private String IdPaciente;
-    private String IdVacina;
-    private int IdDose;
+    private Date dataVacinacao;
+    private String idPaciente;
+    private String idVacina;
+    private int dose;
 
     private ProfissionalSaude profissionalSaude;
 
@@ -27,6 +27,6 @@ public class RegistroVacinacao {
         setDataVacinacao(registroVacinacaoDTO.getDataVacinacao());
         setIdPaciente(registroVacinacaoDTO.getIdPaciente());
         setIdVacina(registroVacinacaoDTO.getIdPaciente());
-        setIdDose(registroVacinacaoDTO.getIdDose());
+        setDose(registroVacinacaoDTO.getDose());
     }
 }
