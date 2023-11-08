@@ -11,4 +11,7 @@ public interface PacienteHttpClient {
     @GetMapping("/obter/{id}")
     public Paciente obterPacientePorId(@PathVariable("id") String id);
 
+    @GetMapping("/obter/uf/{estado}")
+    public Paciente obterPacientePorEstado(@PathVariable("estado") String estado);
+
 }

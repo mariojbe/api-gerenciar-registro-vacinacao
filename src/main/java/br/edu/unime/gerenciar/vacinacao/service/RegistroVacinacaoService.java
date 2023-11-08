@@ -1,12 +1,16 @@
 package br.edu.unime.gerenciar.vacinacao.service;
 
 import br.edu.unime.gerenciar.vacinacao.entity.RegistroVacinacao;
+import br.edu.unime.gerenciar.vacinacao.httpClient.PacienteHttpClient;
 import br.edu.unime.gerenciar.vacinacao.repository.RegistroVacinacaoRepository;
 import br.edu.unime.gerenciar.vacinacao.service.exceptions.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -30,7 +34,6 @@ public class RegistroVacinacaoService {
             RegistroVacinacao novoPaciente = registroVacinacao.get();
             novoPaciente.setDataVacinacao(novosDadosDoRegistroVacinacao.getDataVacinacao());
             novoPaciente.setIdPaciente(novosDadosDoRegistroVacinacao.getIdPaciente());
-            novoPaciente.setIdVacina(novosDadosDoRegistroVacinacao.getIdVacina());
             novoPaciente.setIdVacina(novosDadosDoRegistroVacinacao.getIdVacina());
             novoPaciente.setProfissionalSaude(novosDadosDoRegistroVacinacao.getProfissionalSaude());
             registroVacinacaoRepository.save(novoPaciente);
@@ -63,5 +66,20 @@ public class RegistroVacinacaoService {
         return registroVacinacaoRepository.findByIdPaciente(idPaciente);
     }
 
+    public ResponseEntity<Map<String, Integer>> totalVacinasAplicadas() {
+        Map<String, Integer> response = new HashMap();
+
+        response.put("total_vacinas_aplicadas", (int) registroVacinacaoRepository.count());
+
+        return ResponseEntity.ok(response);
+    }
+
+    public ResponseEntity<Map<String, Integer>> totalVacinasAplicadasPorEstado(String estado) {
+        Map<String, Integer> response = new HashMap();
+
+        response.put("total_vacinas_aplicadas", (int) registroVacinacaoRepository.count());
+
+        return ResponseEntity.ok(response);
+    }
 
 }

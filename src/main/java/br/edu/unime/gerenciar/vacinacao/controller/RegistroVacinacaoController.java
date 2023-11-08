@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin("*")
@@ -120,4 +121,9 @@ public class RegistroVacinacaoController {
         return ResponseEntity.ok().body(null);
     }
 
+    @GetMapping("/vacinas-aplicadas")
+    public ResponseEntity<Map<String, Integer>> getTotalVacinasAplicadas() {
+        return registroVacinacaoService.totalVacinasAplicadas();
+    }
+    
 }
