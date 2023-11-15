@@ -21,8 +21,6 @@ public class RegistroVacinacaoService {
     }
 
     public RegistroVacinacao inserir(RegistroVacinacao registroVacinacao) {
-        // pegar registro de vacinação com base no id do paciente e e compara se a vacina e fabricante é o mesmo
-        //e só gravar se for o mesmo. caso não tenha registro grava.
         List<RegistroVacinacao> registrosDoPaciente = findByIdPaciente(registroVacinacao.getIdPaciente());
         List<RegistroVacinacao> vacinasComEsseId = new ArrayList<>();
         if (registrosDoPaciente.isEmpty()){
