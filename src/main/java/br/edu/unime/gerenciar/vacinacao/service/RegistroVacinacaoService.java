@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class RegistroVacinacaoService {
@@ -23,8 +20,34 @@ public class RegistroVacinacaoService {
         return registroVacinacaoRepository.findAll();
     }
 
-    public void inserir(RegistroVacinacao registroVacinacao) {
-        registroVacinacaoRepository.insert(registroVacinacao);
+    public RegistroVacinacao inserir(RegistroVacinacao registroVacinacao) {
+        // pegar registro de vacinação com base no id do paciente e e compara se a vacina e fabricante é o mesmo
+        //e só gravar se for o mesmo. caso não tenha registro grava.
+        List<RegistroVacinacao> registrosDoPaciente = findByIdPaciente(registroVacinacao.getIdPaciente());
+        List<RegistroVacinacao> vacinasComEsseId = new ArrayList<>();
+        if (registrosDoPaciente.isEmpty()){
+            registroVacinacaoRepository.insert(registroVacinacao);
+        }else{
+            for (RegistroVacinacao reg : registrosDoPaciente){
+                  if (reg.getIdVacina() == registroVacinacao.getIdVacina() && reg.getFabricante() == registroVacinacao.getFabricante()){
+                      vacinasComEsseId.add(reg);
+                  }
+            }
+
+            if(vacinasComEsseId.isEmpty()){
+                //se não encontrou nenhum registro com essa vacina então é a primeira dose dessa vacina em questão
+                registroVacinacaoRepository.insert(registroVacinacao);
+            }
+           if ( vacinasComEsseId.size() < registroVacinacao.getDose()){
+               for (RegistroVacinacao registroLocal : vacinasComEsseId){
+                   if (registroLocal.getDataProximaVacinacao().after(registroVacinacao.getDataVacinacao()) || registroLocal.getDataProximaVacinacao().equals(registroVacinacao.getDataVacinacao()) ) {
+                       registroVacinacaoRepository.insert(registroVacinacao);
+                   }
+               }
+           }
+
+        }
+return registroVacinacao;
     }
 
     public RegistroVacinacao atualizarPorId(String id, RegistroVacinacao novosDadosDoRegistroVacinacao) {

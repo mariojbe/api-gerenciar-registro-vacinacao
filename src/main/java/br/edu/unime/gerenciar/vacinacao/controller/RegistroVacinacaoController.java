@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -78,19 +79,29 @@ public class RegistroVacinacaoController {
         return ResponseEntity.ok().body(registroVacinacao).getBody();
         //return registroVacinacao;
     }
-
+    Date GetDataProximaVacinacao(int dias){
+        Date d = new Date();
+        d.setDate(d.getDate() + dias);
+        return d;
+    }
     @PostMapping("/cadastrar")
     public ResponseEntity<RegistroVacinacao> inserir(@RequestBody @Valid RegistroVacinacaoDTO registroVacinacaoDTO) throws Exception {
         RegistroVacinacao registroVacinacao = new RegistroVacinacao(registroVacinacaoDTO);
+        Date dataAtual = new Date();
+
 
         Paciente paciente = pacienteHttpClient.obterPacientePorId(registroVacinacaoDTO.getIdPaciente());
         Vacina vacina = vacinaHttpClient.obterVacinaPorId(registroVacinacaoDTO.getIdVacina());
         ProfissionalSaude profissionalSaude = profissionalSaudeService.obterProfissionalSaudePorCPF(registroVacinacaoDTO.getCpfProfisionalSaude());
 
+        registroVacinacao.setEstado(paciente.getEstado());
+        registroVacinacao.setFabricante(vacina.getFabricante());
         registroVacinacao.setIdPaciente(paciente.getId());
         registroVacinacao.setIdVacina(vacina.getId());
         registroVacinacao.setProfissionalSaude(profissionalSaude);
-
+        registroVacinacao.setDose(vacina.getDoses());
+        registroVacinacao.setDataProximaVacinacao(GetDataProximaVacinacao(vacina.getIntervaloEntreDoses()));
+        registroVacinacao.setDataVacinacao(dataAtual);
         registroVacinacaoService.inserir(registroVacinacao);
 
         return ResponseEntity.created(null).body(registroVacinacao);

@@ -1,6 +1,10 @@
 package br.edu.unime.gerenciar.vacinacao.entity;
 
 import br.edu.unime.gerenciar.vacinacao.dto.RegistroVacinacaoDTO;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,10 +20,17 @@ import java.util.Date;
 public class RegistroVacinacao {
     @Id
     private String id;
+    @NotNull
+    @Past // deve ser obrigatorio e a data deve ser atual
     private Date dataVacinacao;
     private String idPaciente;
     private String idVacina;
     private int dose;
+    private String estado;
+    private String fabricante;
+    @NotNull
+    @Future(message = "A data de validade deve ser futura!")
+    private Date dataProximaVacinacao;
 
     private ProfissionalSaude profissionalSaude;
 
