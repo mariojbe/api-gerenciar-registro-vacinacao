@@ -85,7 +85,7 @@ public class RegistroVacinacaoController {
         return d;
     }
     @PostMapping("/cadastrar")
-    public ResponseEntity<RegistroVacinacao> inserir(@RequestBody @Valid RegistroVacinacaoDTO registroVacinacaoDTO) throws Exception {
+    public ResponseEntity<Map<String, RegistroVacinacao>> inserir(@RequestBody @Valid RegistroVacinacaoDTO registroVacinacaoDTO) throws Exception {
         RegistroVacinacao registroVacinacao = new RegistroVacinacao(registroVacinacaoDTO);
         Date dataAtual = new Date();
 
@@ -99,12 +99,12 @@ public class RegistroVacinacaoController {
         registroVacinacao.setIdPaciente(paciente.getId());
         registroVacinacao.setIdVacina(vacina.getId());
         registroVacinacao.setProfissionalSaude(profissionalSaude);
-        registroVacinacao.setDose(vacina.getDoses());
         registroVacinacao.setDataProximaVacinacao(GetDataProximaVacinacao(vacina.getIntervaloEntreDoses()));
         registroVacinacao.setDataVacinacao(dataAtual);
-        registroVacinacaoService.inserir(registroVacinacao);
+        registroVacinacao.setDosesEspecificadas(vacina.getDoses());
+        registroVacinacao.setEstado(registroVacinacao.getEstado());
 
-        return ResponseEntity.created(null).body(registroVacinacao);
+        return registroVacinacaoService.inserir(registroVacinacao);
     }
 
     @PutMapping("/editar/{id}")

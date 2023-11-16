@@ -15,7 +15,7 @@ public class RegistroVacinacaoDTO {
     private Date dataVacinacao;
     private String idPaciente;
     private String idVacina;
-    private int dose;
+    private int doses;
     private String estado;
 
     @CPF

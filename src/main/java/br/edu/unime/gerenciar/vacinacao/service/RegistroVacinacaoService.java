@@ -1,5 +1,6 @@
 package br.edu.unime.gerenciar.vacinacao.service;
 
+import br.edu.unime.gerenciar.vacinacao.MessagensErros.MensagensRetornoException;
 import br.edu.unime.gerenciar.vacinacao.entity.RegistroVacinacao;
 import br.edu.unime.gerenciar.vacinacao.httpClient.PacienteHttpClient;
 import br.edu.unime.gerenciar.vacinacao.repository.RegistroVacinacaoRepository;
@@ -20,32 +21,57 @@ public class RegistroVacinacaoService {
         return registroVacinacaoRepository.findAll();
     }
 
-    public RegistroVacinacao inserir(RegistroVacinacao registroVacinacao) {
-        List<RegistroVacinacao> registrosDoPaciente = findByIdPaciente(registroVacinacao.getIdPaciente());
-        List<RegistroVacinacao> vacinasComEsseId = new ArrayList<>();
-        if (registrosDoPaciente.isEmpty()){
+    public List<RegistroVacinacao> registrosDessaVacinaNoPaciente(RegistroVacinacao registroVacinacao){
+        List<RegistroVacinacao> vacinacoesDoPaciente = findByIdPaciente(registroVacinacao.getIdPaciente());
+        List<RegistroVacinacao> vacinacoesComEssaVacina = new ArrayList<>();
+        for (RegistroVacinacao reg : vacinacoesDoPaciente){
+            if (reg.getIdVacina().equals(registroVacinacao.getIdVacina())  && reg.getFabricante().equals( registroVacinacao.getFabricante()) ){
+                vacinacoesComEssaVacina.add(reg);
+            }
+        }
+        return vacinacoesComEssaVacina;
+    }
+    Date dataPrevistaParaProximaVacina = new Date();
+    public boolean verificarIntervaloEntreDoze(RegistroVacinacao registroVacinacao){
+        List<RegistroVacinacao> registrosDessaVacinaNoPaciente = registrosDessaVacinaNoPaciente(registroVacinacao);
+            for (RegistroVacinacao registroLocal : registrosDessaVacinaNoPaciente){
+                dataPrevistaParaProximaVacina = registroLocal.getDataProximaVacinacao();
+                if (registroLocal.getDataProximaVacinacao().before(registroVacinacao.getDataVacinacao()) || registroLocal.getDataProximaVacinacao().equals(registroVacinacao.getDataVacinacao()) ) {
+                    return true;
+                }
+            }
+        return false;
+    }
+
+    public boolean naoConcluiuTodasAsDozesParaEssaVacina(RegistroVacinacao registroVacinacao){
+        List<RegistroVacinacao> registrosDessaVacinaNoPaciente = registrosDessaVacinaNoPaciente(registroVacinacao);
+        if ( registrosDessaVacinaNoPaciente.size() == registroVacinacao.getDosesEspecificadas()){
+           return false;
+        }
+        return true;
+    }
+
+    public ResponseEntity<Map<String, RegistroVacinacao>> inserir(RegistroVacinacao registroVacinacao) {
+        List<RegistroVacinacao> registrosDessaVacinaNoPaciente = registrosDessaVacinaNoPaciente(registroVacinacao);
+        Map<String, RegistroVacinacao> response = new HashMap();
+        if (registrosDessaVacinaNoPaciente.isEmpty()){
             registroVacinacaoRepository.insert(registroVacinacao);
         }else{
-            for (RegistroVacinacao reg : registrosDoPaciente){
-                  if (reg.getIdVacina() == registroVacinacao.getIdVacina() && reg.getFabricante() == registroVacinacao.getFabricante()){
-                      vacinasComEsseId.add(reg);
-                  }
-            }
+            if(naoConcluiuTodasAsDozesParaEssaVacina(registroVacinacao)){
+                if(verificarIntervaloEntreDoze(registroVacinacao)){
+                    registroVacinacaoRepository.insert(registroVacinacao);
 
-            if(vacinasComEsseId.isEmpty()){
-                //se não encontrou nenhum registro com essa vacina então é a primeira dose dessa vacina em questão
-                registroVacinacaoRepository.insert(registroVacinacao);
+                }else{
+                    response.put("Intervalo entre doze menor que o especificado, previsão para: "+dataPrevistaParaProximaVacina, (RegistroVacinacao) registroVacinacao);
+                    return ResponseEntity.badRequest().body(response);
+                }
+            }else{
+                response.put("Todas as dozes para essa vacina ja foram tomadas.", (RegistroVacinacao) registroVacinacao);
+               return ResponseEntity.badRequest().body(response);
             }
-           if ( vacinasComEsseId.size() < registroVacinacao.getDose()){
-               for (RegistroVacinacao registroLocal : vacinasComEsseId){
-                   if (registroLocal.getDataProximaVacinacao().after(registroVacinacao.getDataVacinacao()) || registroLocal.getDataProximaVacinacao().equals(registroVacinacao.getDataVacinacao()) ) {
-                       registroVacinacaoRepository.insert(registroVacinacao);
-                   }
-               }
-           }
-
         }
-return registroVacinacao;
+        response.put("Registrado com sucesso!", (RegistroVacinacao) registroVacinacao);
+        return ResponseEntity.ok().body(response);
     }
 
     public RegistroVacinacao atualizarPorId(String id, RegistroVacinacao novosDadosDoRegistroVacinacao) {

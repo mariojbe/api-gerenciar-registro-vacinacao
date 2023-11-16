@@ -25,7 +25,7 @@ public class RegistroVacinacao {
     private Date dataVacinacao;
     private String idPaciente;
     private String idVacina;
-    private int dose;
+    private int dosesEspecificadas;
     private String estado;
     private String fabricante;
     @NotNull
@@ -38,6 +38,6 @@ public class RegistroVacinacao {
         setDataVacinacao(registroVacinacaoDTO.getDataVacinacao());
         setIdPaciente(registroVacinacaoDTO.getIdPaciente());
         setIdVacina(registroVacinacaoDTO.getIdPaciente());
-        setDose(registroVacinacaoDTO.getDose());
+        setDosesEspecificadas(registroVacinacaoDTO.getDoses());
     }
 }
