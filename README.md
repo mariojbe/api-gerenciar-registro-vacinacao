@@ -56,6 +56,7 @@ DELETE /api/vacinacao/remover/{id} - Exclui um registro de vacinação se o regi
 
 GET /api/vacinacao/vacinas-aplicadas?estado=BA&&fabricante=PARAMO - total de vacinações podendo filtar por estado e/ou fabricante
 
+GET /api/vacinacao/pacientes_dose_atrasada?estado=CE - total de paciente com dozes atrasadas com a possibilidade de filtro por estado
 ```
 
 ## Base de Dados

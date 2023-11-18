@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -109,7 +110,7 @@ public class RegistroVacinacaoService {
                                 "dia " + formato.format(registroV.getDataVacinacao()) + ". A próxima dose deverá ser aplicada a partir do dia " + formato.format(registroV.getDataProximaVacinacao()), (RegistroVacinacao) registroVacinacao);
                         return ResponseEntity.badRequest().body(response);
                     }
-                }else if (registroVacinaDiferente.getId() != null) {
+                } else if (registroVacinaDiferente.getId() != null) {
                     response.put("A primeira dose aplicada no paciente " + registroVacinaDiferente.getNomePaciente() + " foi:" +
                             registroVacinaDiferente.getNomeVacina() + " do laboratório " + registroVacinaDiferente.getFabricante() + ". Todas as doses devem ser aplicadas com " +
                             "o mesmo medicamento!", (RegistroVacinacao) registroVacinacao);
@@ -276,6 +277,44 @@ public class RegistroVacinacaoService {
         response.put("Nenhum registro de vacinação encontrado para o filtro: " + (!estado.isEmpty() ? "estado: " + estado : "") + " " + (!fabricante.isEmpty() ? "fabricante: " + fabricante : ""), (int) 0);
         return ResponseEntity.ok(response);
 
+    }
+
+    public ResponseEntity<Map<String, Integer>> pacientesComDosesAtrasadas(String estado) {
+        Date hoje = new Date();
+        Map<String, Integer> response = new HashMap();
+        List<RegistroVacinacao> todosRegistros = registroVacinacaoRepository.findAll();
+        List<RegistroVacinacao> pacientesRetorno = new ArrayList<>();
+        if (estado.isEmpty()){
+            for (RegistroVacinacao registro : todosRegistros) {
+                if (registro.getDataProximaVacinacao() != null && registro.getDataProximaVacinacao().before(hoje)) {
+                    pacientesRetorno.add(registro);
+                }
+            }
+        }else{
+            for (RegistroVacinacao registro : todosRegistros) {
+                if (registro.getDataProximaVacinacao() != null && registro.getDataProximaVacinacao().before(hoje) && registro.getEstado().equals(estado)) {
+                    pacientesRetorno.add(registro);
+                }
+            }
+        }
+
+        if (pacientesRetorno.isEmpty()){
+            if (estado.isEmpty()){
+                response.put("Nenhum paciente com Vacina atrasada", (Integer) 0);
+                return ResponseEntity.ok(response);
+            }else{
+                response.put("Nenhum paciente com Vacina atrasada no estado " + estado, (Integer) 0);
+                return ResponseEntity.ok(response);
+            }
+
+        }
+        if (!estado.isEmpty()){
+            response.put("Total de pacientes com vacina atrasada no estado " + estado, (Integer) pacientesRetorno.size());
+            return ResponseEntity.ok(response);
+        }
+
+        response.put("Total de pacientes com vacina atrasada", (Integer) pacientesRetorno.size());
+        return ResponseEntity.ok(response);
     }
 
 }
