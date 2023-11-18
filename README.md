@@ -11,7 +11,14 @@ O objetivo deste repositório é gerenciar o registro de vacinação através de
 
 • Identificação da Dose
 
+• Cadastrar o Profissional de Saúde
+
+• Remover o Profissional de Saúde
+
+• Identificação do Profissional de Saúde (id)
+
 • Identificação do Profissional de Saúde (Nome e CPF)
+
 
 Este projeto foi desenvolvido durante a disciplina de Programação para Web II
 do curso de Bacharelado em Sitemas de Informação da UNIME(União Metropolitana de Educação e Cultura)
@@ -57,6 +64,26 @@ DELETE /api/vacinacao/remover/{id} - Exclui um registro de vacinação se o regi
 GET /api/vacinacao/vacinas-aplicadas?estado=BA&&fabricante=PARAMO - total de vacinações podendo filtar por estado e/ou fabricante
 
 GET /api/vacinacao/pacientes_dose_atrasada?estado=CE - total de paciente com dozes atrasadas com a possibilidade de filtro por estado
+
+profissional de saude:
+
+/api/profsaude -- lista todos
+
+/api/profsaude/{cpf} - obter pelo cpf
+
+/api/profsaude/obter/{id} - obter pelo id
+
+/api/profsaude/cadastrar - cadastrar profissional
+exemplo do corpo:
+{
+"nome": "BSI PARAMO",
+"cpf":"23671044098"
+}
+
+
+/api/profsaude/editar/{id} - editar pelo id
+
+/api/profsaude/remover/{id} - remover pelo id
 ```
 
 ## Base de Dados
