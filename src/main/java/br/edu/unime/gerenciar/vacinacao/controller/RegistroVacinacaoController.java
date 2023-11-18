@@ -135,8 +135,8 @@ public class RegistroVacinacaoController {
     }
 
     @GetMapping("/vacinas-aplicadas")
-    public ResponseEntity<Map<String, Integer>> getTotalVacinasAplicadas() {
-        return registroVacinacaoService.totalVacinasAplicadas();
+    public ResponseEntity<Map<String, Integer>> getTotalVacinasAplicadas(@RequestParam("estado") String estado, @RequestParam("fabricante") String fabricante) {
+        return registroVacinacaoService.totalVacinasAplicadas(estado, fabricante);
     }
     
 }

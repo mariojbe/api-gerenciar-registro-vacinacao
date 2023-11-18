@@ -52,7 +52,10 @@ POST /api/vacinacao/cadastrar - Registra uma nova vacinação.
 
 PUT /api/vacinacao/editar/{id} - Atualiza os dados de registro de uma vacinação.
 
-DELETE /api/vacinacao/remover/{id} - Exclui um registro de vacinação.
+DELETE /api/vacinacao/remover/{id} - Exclui um registro de vacinação se o registro for o mais recente.
+
+GET /api/vacinacao/vacinas-aplicadas?estado=BA&&fabricante=PARAMO - total de vacinações podendo filtar por estado e/ou fabricante
+
 ```
 
 ## Base de Dados

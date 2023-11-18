@@ -21,32 +21,34 @@ public class RegistroVacinacaoService {
         return registroVacinacaoRepository.findAll();
     }
 
-    public List<RegistroVacinacao> registrosDessaVacinaNoPaciente(RegistroVacinacao registroVacinacao){
+    public List<RegistroVacinacao> registrosDessaVacinaNoPaciente(RegistroVacinacao registroVacinacao) {
         List<RegistroVacinacao> vacinacoesDoPaciente = findByIdPaciente(registroVacinacao.getIdPaciente());
         List<RegistroVacinacao> vacinacoesComEssaVacina = new ArrayList<>();
-        for (RegistroVacinacao reg : vacinacoesDoPaciente){
-            if (reg.getIdVacina().equals(registroVacinacao.getIdVacina())  && reg.getFabricante().equals( registroVacinacao.getFabricante()) ){
+        for (RegistroVacinacao reg : vacinacoesDoPaciente) {
+            if (reg.getIdVacina().equals(registroVacinacao.getIdVacina()) && reg.getFabricante().equals(registroVacinacao.getFabricante())) {
                 vacinacoesComEssaVacina.add(reg);
             }
         }
         return vacinacoesComEssaVacina;
     }
+
     Date dataPrevistaParaProximaVacina = new Date();
-    public boolean verificarIntervaloEntreDoze(RegistroVacinacao registroVacinacao){
+
+    public boolean verificarIntervaloEntreDoze(RegistroVacinacao registroVacinacao) {
         List<RegistroVacinacao> registrosDessaVacinaNoPaciente = registrosDessaVacinaNoPaciente(registroVacinacao);
-            for (RegistroVacinacao registroLocal : registrosDessaVacinaNoPaciente){
-                dataPrevistaParaProximaVacina = registroLocal.getDataProximaVacinacao();
-                if (registroLocal.getDataProximaVacinacao().before(registroVacinacao.getDataVacinacao()) || registroLocal.getDataProximaVacinacao().equals(registroVacinacao.getDataVacinacao()) ) {
-                    return true;
-                }
+        for (RegistroVacinacao registroLocal : registrosDessaVacinaNoPaciente) {
+            dataPrevistaParaProximaVacina = registroLocal.getDataProximaVacinacao();
+            if (registroLocal.getDataProximaVacinacao().before(registroVacinacao.getDataVacinacao()) || registroLocal.getDataProximaVacinacao().equals(registroVacinacao.getDataVacinacao())) {
+                return true;
             }
+        }
         return false;
     }
 
-    public boolean naoConcluiuTodasAsDozesParaEssaVacina(RegistroVacinacao registroVacinacao){
+    public boolean naoConcluiuTodasAsDozesParaEssaVacina(RegistroVacinacao registroVacinacao) {
         List<RegistroVacinacao> registrosDessaVacinaNoPaciente = registrosDessaVacinaNoPaciente(registroVacinacao);
-        if ( registrosDessaVacinaNoPaciente.size() == registroVacinacao.getDosesEspecificadas()){
-           return false;
+        if (registrosDessaVacinaNoPaciente.size() == registroVacinacao.getDosesEspecificadas()) {
+            return false;
         }
         return true;
     }
@@ -54,20 +56,19 @@ public class RegistroVacinacaoService {
     public ResponseEntity<Map<String, RegistroVacinacao>> inserir(RegistroVacinacao registroVacinacao) {
         List<RegistroVacinacao> registrosDessaVacinaNoPaciente = registrosDessaVacinaNoPaciente(registroVacinacao);
         Map<String, RegistroVacinacao> response = new HashMap();
-        registroVacinacaoRepository.insert(registroVacinacao);
-        if (registrosDessaVacinaNoPaciente.isEmpty()){
+        if (registrosDessaVacinaNoPaciente.isEmpty()) {
             registroVacinacaoRepository.insert(registroVacinacao);
-        }else{
-            if(naoConcluiuTodasAsDozesParaEssaVacina(registroVacinacao)){
-                if(verificarIntervaloEntreDoze(registroVacinacao)){
+        } else {
+            if (naoConcluiuTodasAsDozesParaEssaVacina(registroVacinacao)) {
+                if (verificarIntervaloEntreDoze(registroVacinacao)) {
                     registroVacinacaoRepository.insert(registroVacinacao);
-                }else{
-                    response.put("Intervalo entre doze menor que o especificado, previsão para: "+dataPrevistaParaProximaVacina, (RegistroVacinacao) registroVacinacao);
+                } else {
+                    response.put("Intervalo entre doze menor que o especificado, previsão para: " + dataPrevistaParaProximaVacina, (RegistroVacinacao) registroVacinacao);
                     return ResponseEntity.badRequest().body(response);
                 }
-            }else{
+            } else {
                 response.put("Todas as dozes para essa vacina ja foram tomadas.", (RegistroVacinacao) registroVacinacao);
-               return ResponseEntity.badRequest().body(response);
+                return ResponseEntity.badRequest().body(response);
             }
         }
         response.put("Registrado com sucesso!", (RegistroVacinacao) registroVacinacao);
@@ -81,12 +82,12 @@ public class RegistroVacinacaoService {
 
         RegistroVacinacao registroAtual = new RegistroVacinacao();
         Map<String, RegistroVacinacao> response = new HashMap();
-        for (RegistroVacinacao vacinacao : vacinacoesDoPaciente){
-            if (registroAtual.getId() == null){
+        for (RegistroVacinacao vacinacao : vacinacoesDoPaciente) {
+            if (registroAtual.getId() == null) {
                 registroAtual = vacinacao;
             }
 
-            if (registroAtual.getDataVacinacao().before(vacinacao.getDataVacinacao())){
+            if (registroAtual.getDataVacinacao().before(vacinacao.getDataVacinacao())) {
                 registroAtual = vacinacao;
             }
         }
@@ -113,15 +114,15 @@ public class RegistroVacinacaoService {
         Map<String, RegistroVacinacao> response = new HashMap();
         RegistroVacinacao registroASerExcluido = new RegistroVacinacao();
 
-        for (RegistroVacinacao vacinacao : vacinacoesDoPaciente){
-            if (registroAtual.getId() == null){
+        for (RegistroVacinacao vacinacao : vacinacoesDoPaciente) {
+            if (registroAtual.getId() == null) {
                 registroAtual = vacinacao;
             }
-            if (vacinacao.getId().equals(id)){
+            if (vacinacao.getId().equals(id)) {
                 registroASerExcluido = vacinacao;
             }
 
-            if (registroAtual.getDataVacinacao().before(vacinacao.getDataVacinacao())){
+            if (registroAtual.getDataVacinacao().before(vacinacao.getDataVacinacao())) {
                 registroAtual = vacinacao;
             }
         }
@@ -152,20 +153,77 @@ public class RegistroVacinacaoService {
         return registroVacinacaoRepository.findByIdPaciente(idPaciente);
     }
 
-    public ResponseEntity<Map<String, Integer>> totalVacinasAplicadas() {
-        Map<String, Integer> response = new HashMap();
+    public List<RegistroVacinacao> filtrarPorEstadoEFabricante(String estado, String fabricante, List<RegistroVacinacao> todosRegistros){
+        List<RegistroVacinacao> todosRegistrosRetorno = new ArrayList<>();
 
-        response.put("total_vacinas_aplicadas", (int) registroVacinacaoRepository.count());
-
-        return ResponseEntity.ok(response);
+        if (!fabricante.isEmpty() && !fabricante.isEmpty()) {
+            for (RegistroVacinacao registro : todosRegistros) {
+                if (registro.getEstado().toLowerCase().equals(estado.toLowerCase()) && registro.getFabricante().toLowerCase().equals(fabricante.toLowerCase())) {
+                    todosRegistrosRetorno.add(registro);
+                }
+            }
+        }
+        return todosRegistrosRetorno;
     }
 
-    public ResponseEntity<Map<String, Integer>> totalVacinasAplicadasPorEstado(String estado) {
+    public List<RegistroVacinacao> filtrarPorEstado(String estado, String fabricante, List<RegistroVacinacao> todosRegistros){
+        List<RegistroVacinacao> todosRegistrosRetorno = new ArrayList<>();
+        if (!estado.isEmpty()) {
+            for (RegistroVacinacao registro : todosRegistros) {
+                if (registro.getEstado().toLowerCase().equals(estado.toLowerCase()) && fabricante.isEmpty()) {
+                    todosRegistrosRetorno.add(registro);
+                }
+            }
+        }
+        return todosRegistrosRetorno;
+    }
+
+    public List<RegistroVacinacao> filtrarPorFabricante(String fabricante, String estado, List<RegistroVacinacao> todosRegistros){
+        List<RegistroVacinacao> todosRegistrosRetorno = new ArrayList<>();
+        if (!fabricante.isEmpty() && estado.isEmpty()) {
+            for (RegistroVacinacao registro : todosRegistros) {
+                if (registro.getFabricante().toLowerCase().equals(fabricante.toLowerCase())) {
+                    todosRegistrosRetorno.add(registro);
+                }
+            }
+        }
+        return todosRegistrosRetorno;
+    }
+    public ResponseEntity<Map<String, Integer>> totalVacinasAplicadas(String estado, String fabricante) {
         Map<String, Integer> response = new HashMap();
+        List<RegistroVacinacao> todosRegistros = registroVacinacaoRepository.findAll();
+        List<RegistroVacinacao> todosRegistrosRetorno = new ArrayList<>();
 
-        response.put("total_vacinas_aplicadas", (int) registroVacinacaoRepository.count());
+        if (estado.isEmpty() && fabricante.isEmpty()) {
+            response.put("total_vacinas_aplicadas", (int) registroVacinacaoRepository.count());
+            return ResponseEntity.ok(response);
+        }
 
+        todosRegistrosRetorno = filtrarPorEstadoEFabricante(estado, fabricante, todosRegistros);
+        if (!todosRegistrosRetorno.isEmpty()) {
+           response.put("total_vacinas_aplicadas_no_esatado_"+estado+"_por_fabricante_"+fabricante, (int) todosRegistrosRetorno.size());
+           return ResponseEntity.ok(response);
+        }
+
+        todosRegistrosRetorno = filtrarPorEstado(estado,fabricante, todosRegistros);
+        if (!todosRegistrosRetorno.isEmpty()) {
+            response.put("total_vacinas_aplicadas_no_esatado_"+estado, (int) todosRegistrosRetorno.size());
+            return ResponseEntity.ok(response);
+        }
+
+        todosRegistrosRetorno = filtrarPorFabricante(fabricante,estado, todosRegistros);
+        if (!todosRegistrosRetorno.isEmpty()) {
+            response.put("total_vacinas_aplicadas_desse_fabricante_"+fabricante, (int) todosRegistrosRetorno.size());
+            return ResponseEntity.ok(response);
+        }
+        if (estado.isEmpty() && estado.isEmpty()) {
+            response.put("Nenhum registro de vacinação encontrado", (int) 0);
+            return ResponseEntity.ok(response);
+        }
+
+        response.put("Nenhum registro de vacinação encontrado para o filtro: "+(!estado.isEmpty()?"estado: "+ estado:"")+" "+(!fabricante.isEmpty()?"fabricante: "+fabricante:""), (int) 0);
         return ResponseEntity.ok(response);
+
     }
 
 }
