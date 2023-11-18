@@ -54,13 +54,13 @@ public class RegistroVacinacaoService {
     public ResponseEntity<Map<String, RegistroVacinacao>> inserir(RegistroVacinacao registroVacinacao) {
         List<RegistroVacinacao> registrosDessaVacinaNoPaciente = registrosDessaVacinaNoPaciente(registroVacinacao);
         Map<String, RegistroVacinacao> response = new HashMap();
+        registroVacinacaoRepository.insert(registroVacinacao);
         if (registrosDessaVacinaNoPaciente.isEmpty()){
             registroVacinacaoRepository.insert(registroVacinacao);
         }else{
             if(naoConcluiuTodasAsDozesParaEssaVacina(registroVacinacao)){
                 if(verificarIntervaloEntreDoze(registroVacinacao)){
                     registroVacinacaoRepository.insert(registroVacinacao);
-
                 }else{
                     response.put("Intervalo entre doze menor que o especificado, previsão para: "+dataPrevistaParaProximaVacina, (RegistroVacinacao) registroVacinacao);
                     return ResponseEntity.badRequest().body(response);
@@ -74,25 +74,43 @@ public class RegistroVacinacaoService {
         return ResponseEntity.ok().body(response);
     }
 
-    public RegistroVacinacao atualizarPorId(String id, RegistroVacinacao novosDadosDoRegistroVacinacao) {
+    public ResponseEntity<Map<String, RegistroVacinacao>> atualizarPorId(String id, RegistroVacinacao novosDadosDoRegistroVacinacao) {
         Optional<RegistroVacinacao> registroVacinacao = findById(id);
 
-        if (registroVacinacao.isPresent()) {
+        List<RegistroVacinacao> vacinacoesDoPaciente = findByIdPaciente(registroVacinacao.get().getIdPaciente());
+
+        RegistroVacinacao registroAtual = new RegistroVacinacao();
+        Map<String, RegistroVacinacao> response = new HashMap();
+        for (RegistroVacinacao vacinacao : vacinacoesDoPaciente){
+            if (registroAtual.getId() == null){
+                registroAtual = vacinacao;
+            }
+
+            if (registroAtual.getDataVacinacao().before(vacinacao.getDataVacinacao())){
+                registroAtual = vacinacao;
+            }
+        }
+
+        if (registroVacinacao.isPresent() && registroAtual.getId().equals(id)) {
             RegistroVacinacao novoPaciente = registroVacinacao.get();
             novoPaciente.setDataVacinacao(novosDadosDoRegistroVacinacao.getDataVacinacao());
-            novoPaciente.setIdPaciente(novosDadosDoRegistroVacinacao.getIdPaciente());
-            novoPaciente.setIdVacina(novosDadosDoRegistroVacinacao.getIdVacina());
             novoPaciente.setProfissionalSaude(novosDadosDoRegistroVacinacao.getProfissionalSaude());
-            registroVacinacaoRepository.save(novoPaciente);
-            return novoPaciente;
-        }
-        return null;
+            novoPaciente.setEstado(novosDadosDoRegistroVacinacao.getEstado());
 
+            //novoPaciente.setIdPaciente(novosDadosDoRegistroVacinacao.getIdPaciente());
+            //novoPaciente.setIdVacina(novosDadosDoRegistroVacinacao.getIdVacina());
+
+            registroVacinacaoRepository.save(novoPaciente);
+            response.put("Atualizado com sucesso!", (RegistroVacinacao) novoPaciente);
+            return ResponseEntity.ok().body(response);
+        }
+        response.put("Só é possivel editar o ultimo registro de vacianação.", (RegistroVacinacao) novosDadosDoRegistroVacinacao);
+        return ResponseEntity.badRequest().body(response);
     }
 
     public void remove(String id) {
-        Optional<RegistroVacinacao> paciente = findById(id);
 
+        Optional<RegistroVacinacao> paciente = findById(id);
         paciente.ifPresent(value -> registroVacinacaoRepository.delete(value));
     }
 
