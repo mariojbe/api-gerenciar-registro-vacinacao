@@ -97,9 +97,6 @@ public class RegistroVacinacaoService {
             novoPaciente.setProfissionalSaude(novosDadosDoRegistroVacinacao.getProfissionalSaude());
             novoPaciente.setEstado(novosDadosDoRegistroVacinacao.getEstado());
 
-            //novoPaciente.setIdPaciente(novosDadosDoRegistroVacinacao.getIdPaciente());
-            //novoPaciente.setIdVacina(novosDadosDoRegistroVacinacao.getIdVacina());
-
             registroVacinacaoRepository.save(novoPaciente);
             response.put("Atualizado com sucesso!", (RegistroVacinacao) novoPaciente);
             return ResponseEntity.ok().body(response);
@@ -108,10 +105,34 @@ public class RegistroVacinacaoService {
         return ResponseEntity.badRequest().body(response);
     }
 
-    public void remove(String id) {
+    public ResponseEntity<Map<String, RegistroVacinacao>> remove(String id) {
+        Optional<RegistroVacinacao> registroVacina = findById(id);
 
-        Optional<RegistroVacinacao> paciente = findById(id);
-        paciente.ifPresent(value -> registroVacinacaoRepository.delete(value));
+        List<RegistroVacinacao> vacinacoesDoPaciente = findByIdPaciente(registroVacina.get().getIdPaciente());
+        RegistroVacinacao registroAtual = new RegistroVacinacao();
+        Map<String, RegistroVacinacao> response = new HashMap();
+        RegistroVacinacao registroASerExcluido = new RegistroVacinacao();
+
+        for (RegistroVacinacao vacinacao : vacinacoesDoPaciente){
+            if (registroAtual.getId() == null){
+                registroAtual = vacinacao;
+            }
+            if (vacinacao.getId().equals(id)){
+                registroASerExcluido = vacinacao;
+            }
+
+            if (registroAtual.getDataVacinacao().before(vacinacao.getDataVacinacao())){
+                registroAtual = vacinacao;
+            }
+        }
+
+        if (registroVacina.isPresent() && registroAtual.getId().equals(id)) {
+            registroVacina.ifPresent(value -> registroVacinacaoRepository.delete(value));
+            response.put("Registro Excluido com sucesso!", (RegistroVacinacao) registroASerExcluido);
+            return ResponseEntity.ok().body(response);
+        }
+        response.put("Só é permitido apenas a exclusão do ultimo registro.", (RegistroVacinacao) registroASerExcluido);
+        return ResponseEntity.badRequest().body(response);
     }
 
     public Optional<RegistroVacinacao> findById(String id) {

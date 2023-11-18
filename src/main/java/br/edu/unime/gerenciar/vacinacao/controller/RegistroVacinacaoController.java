@@ -118,23 +118,20 @@ public class RegistroVacinacaoController {
         if (registroVacinacao.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-
         ResponseEntity<Map<String,RegistroVacinacao>> responseRegistroVacinacao = registroVacinacaoService.atualizarPorId(id, novosDadosDoPRegistroVacinacao);
 
         return responseRegistroVacinacao;
     }
 
     @DeleteMapping("/remover/{id}")
-    public ResponseEntity<RegistroVacinacao> remover(@PathVariable String id) {
+    public ResponseEntity<Map<String, RegistroVacinacao>> remover(@PathVariable String id) {
         Optional<RegistroVacinacao> registroVacinacao = registroVacinacaoService.findById(id);
 
         if (registroVacinacao.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        registroVacinacaoService.remove(id);
-
-        return ResponseEntity.ok().body(null);
+        return registroVacinacaoService.remove(id);
     }
 
     @GetMapping("/vacinas-aplicadas")
