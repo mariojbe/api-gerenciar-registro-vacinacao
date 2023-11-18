@@ -24,6 +24,8 @@ public class RegistroVacinacao {
     @Past // deve ser obrigatorio e a data deve ser atual
     private Date dataVacinacao;
     private String idPaciente;
+    private String nomePaciente;
+    private String nomeVacina;
     private String idVacina;
     private int dosesEspecificadas;
     private String estado;

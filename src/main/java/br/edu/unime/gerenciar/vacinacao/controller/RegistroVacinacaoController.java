@@ -103,6 +103,8 @@ public class RegistroVacinacaoController {
         registroVacinacao.setDataVacinacao(dataAtual);
         registroVacinacao.setDosesEspecificadas(vacina.getDoses());
         registroVacinacao.setEstado(registroVacinacao.getEstado());
+        registroVacinacao.setNomePaciente(paciente.getNome());
+        registroVacinacao.setNomeVacina(vacina.getNome());
 
         return registroVacinacaoService.inserir(registroVacinacao);
     }
