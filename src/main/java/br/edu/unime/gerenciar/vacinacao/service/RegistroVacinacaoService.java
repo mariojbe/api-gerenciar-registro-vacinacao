@@ -86,9 +86,9 @@ public class RegistroVacinacaoService {
         return ultimoRegistro;
     }
 
-    public ResponseEntity<Map<String, RegistroVacinacao>> inserir(RegistroVacinacao registroVacinacao) {
+    public ResponseEntity<?> inserir(RegistroVacinacao registroVacinacao) {
         List<RegistroVacinacao> registrosDessaVacinaNoPaciente = registrosDessaVacinaNoPaciente(registroVacinacao);
-        Map<String, RegistroVacinacao> response = new HashMap();
+        String menssagemErro = "";
         RegistroVacinacao registroVacinaDiferente = verificarSeTemRegistroDeOutroFabricanteEVacina(registroVacinacao);
 
         if (registrosDessaVacinaNoPaciente.isEmpty() && registroVacinaDiferente.getId() == null) {
@@ -101,30 +101,26 @@ public class RegistroVacinacaoService {
                     if (registroV.getId().equals(registroVacinacao.getId()) && registroVacinaDiferente.getId() == null) {
                         registroVacinacaoRepository.insert(registroVacinacao);
                     } else if (registroVacinaDiferente.getId() != null) {
-                        response.put("A primeira dose aplicada no paciente " + registroVacinaDiferente.getNomePaciente() + " foi:" +
-                                registroVacinaDiferente.getNomeVacina() + " do laboratório " + registroVacinaDiferente.getFabricante() + ". Todas as doses devem ser aplicadas com " +
-                                "o mesmo medicamento!", (RegistroVacinacao) registroVacinacao);
-                        return ResponseEntity.badRequest().body(response);
+                        menssagemErro ="A primeira dose aplicada no paciente " + registroVacinaDiferente.getNomePaciente() + " foi:" + registroVacinaDiferente.getNomeVacina() + " do laboratório " + registroVacinaDiferente.getFabricante() + ". Todas as doses devem ser aplicadas com " + "o mesmo medicamento!";
+                        return ResponseEntity.badRequest().body(menssagemErro);
                     } else {
-                        response.put("O paciente " + registroV.getNomePaciente() + " recebeu uma dose de " + registroV.getNomeVacina() + " no " +
-                                "dia " + formato.format(registroV.getDataVacinacao()) + ". A próxima dose deverá ser aplicada a partir do dia " + formato.format(registroV.getDataProximaVacinacao()), (RegistroVacinacao) registroVacinacao);
-                        return ResponseEntity.badRequest().body(response);
+                        menssagemErro = "O paciente " + registroV.getNomePaciente() + " recebeu uma dose de " + registroV.getNomeVacina() + " no " +
+                                "dia " + formato.format(registroV.getDataVacinacao()) + ". A próxima dose deverá ser aplicada a partir do dia " + formato.format(registroV.getDataProximaVacinacao());
+                        return ResponseEntity.badRequest().body(menssagemErro);
                     }
                 } else if (registroVacinaDiferente.getId() != null) {
-                    response.put("A primeira dose aplicada no paciente " + registroVacinaDiferente.getNomePaciente() + " foi:" +
+                    menssagemErro= "A primeira dose aplicada no paciente " + registroVacinaDiferente.getNomePaciente() + " foi:" +
                             registroVacinaDiferente.getNomeVacina() + " do laboratório " + registroVacinaDiferente.getFabricante() + ". Todas as doses devem ser aplicadas com " +
-                            "o mesmo medicamento!", (RegistroVacinacao) registroVacinacao);
-                    return ResponseEntity.badRequest().body(response);
+                            "o mesmo medicamento!";
+                    return ResponseEntity.badRequest().body(menssagemErro);
                 }
-
             } else {
-                response.put("Não foi possível registrar sua solicitação pois o paciente " +
-                        registroAtual.getNomePaciente() + " concluiu TODAS doses de " + registroAtual.getNomeVacina() + " no dia " + formato.format(registroAtual.getDataVacinacao()), (RegistroVacinacao) registroVacinacao);
-                return ResponseEntity.badRequest().body(response);
+                menssagemErro = "Não foi possível registrar sua solicitação pois o paciente " +
+                        registroAtual.getNomePaciente() + " concluiu TODAS doses de " + registroAtual.getNomeVacina() + " no dia " + formato.format(registroAtual.getDataVacinacao());
+                return ResponseEntity.badRequest().body(menssagemErro);
             }
         }
-        response.put("Registrado com sucesso!", (RegistroVacinacao) registroVacinacao);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(registroVacinacao);
     }
 
     public ResponseEntity<Map<String, RegistroVacinacao>> atualizarPorId(String id, RegistroVacinacao novosDadosDoRegistroVacinacao) {

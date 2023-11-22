@@ -85,28 +85,32 @@ public class RegistroVacinacaoController {
         return d;
     }
     @PostMapping("/cadastrar")
-    public ResponseEntity<Map<String, RegistroVacinacao>> inserir(@RequestBody @Valid RegistroVacinacaoDTO registroVacinacaoDTO) throws Exception {
+    public ResponseEntity<?> inserir(@RequestBody @Valid RegistroVacinacaoDTO registroVacinacaoDTO) throws Exception {
         RegistroVacinacao registroVacinacao = new RegistroVacinacao(registroVacinacaoDTO);
         Date dataAtual = new Date();
 
+        try {
+            Paciente paciente = pacienteHttpClient.obterPacientePorId(registroVacinacaoDTO.getIdPaciente());
+            Vacina vacina = vacinaHttpClient.obterVacinaPorId(registroVacinacaoDTO.getIdVacina());
+            ProfissionalSaude profissionalSaude = profissionalSaudeService.obterProfissionalSaudePorCPF(registroVacinacaoDTO.getCpfProfisionalSaude());
 
-        Paciente paciente = pacienteHttpClient.obterPacientePorId(registroVacinacaoDTO.getIdPaciente());
-        Vacina vacina = vacinaHttpClient.obterVacinaPorId(registroVacinacaoDTO.getIdVacina());
-        ProfissionalSaude profissionalSaude = profissionalSaudeService.obterProfissionalSaudePorCPF(registroVacinacaoDTO.getCpfProfisionalSaude());
+            registroVacinacao.setEstado(paciente.getEstado());
+            registroVacinacao.setFabricante(vacina.getFabricante());
+            registroVacinacao.setIdPaciente(paciente.getId());
+            registroVacinacao.setIdVacina(vacina.getId());
+            registroVacinacao.setProfissionalSaude(profissionalSaude);
+            registroVacinacao.setDataProximaVacinacao(GetDataProximaVacinacao(vacina.getIntervaloEntreDoses()));
+            registroVacinacao.setDataVacinacao(dataAtual);
+            registroVacinacao.setDosesEspecificadas(vacina.getDoses());
+            registroVacinacao.setEstado(registroVacinacao.getEstado());
+            registroVacinacao.setNomePaciente(paciente.getNome());
+            registroVacinacao.setNomeVacina(vacina.getNome());
 
-        registroVacinacao.setEstado(paciente.getEstado());
-        registroVacinacao.setFabricante(vacina.getFabricante());
-        registroVacinacao.setIdPaciente(paciente.getId());
-        registroVacinacao.setIdVacina(vacina.getId());
-        registroVacinacao.setProfissionalSaude(profissionalSaude);
-        registroVacinacao.setDataProximaVacinacao(GetDataProximaVacinacao(vacina.getIntervaloEntreDoses()));
-        registroVacinacao.setDataVacinacao(dataAtual);
-        registroVacinacao.setDosesEspecificadas(vacina.getDoses());
-        registroVacinacao.setEstado(registroVacinacao.getEstado());
-        registroVacinacao.setNomePaciente(paciente.getNome());
-        registroVacinacao.setNomeVacina(vacina.getNome());
+            return registroVacinacaoService.inserir(registroVacinacao);
 
-        return registroVacinacaoService.inserir(registroVacinacao);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Verifique se: Vacina, Paciente e o Profissional de saúde estão cadastrados");
+        }
     }
 
     Date GetDataPersonalizadaProximaVacinacao(int dias, Date d){
