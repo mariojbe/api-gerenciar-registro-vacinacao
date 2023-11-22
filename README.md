@@ -55,7 +55,17 @@ GET /api/vacinacao - Retorna uma lista de todos os dados do registro de vacinaç
 
 GET /api/vacinacao/obter/{id} - Retorna dados de apenas um registro de uma vacinação através do id.
 
+
 POST /api/vacinacao/cadastrar - Registra uma nova vacinação.
+Exemplo do Corpo JSON:
+{
+    "dataVacinacao": "2025-12-31",
+    "idPaciente": "653c422de542ce50230e7c9c",
+    "idVacina": "6529f2fe91cd2c0970b33adc",
+    "dose": 1,
+    "cpfProfisionalSaude": "81111789053"
+}
+
 
 PUT /api/vacinacao/editar/{id} - Atualiza os dados de registro de uma vacinação.
 
@@ -73,8 +83,9 @@ profissional de saude:
 
 /api/profsaude/obter/{id} - obter pelo id
 
+
 /api/profsaude/cadastrar - cadastrar profissional
-exemplo do corpo:
+Exemplo do Corpo JSON:
 {
 "nome": "BSI PARAMO",
 "cpf":"23671044098"
