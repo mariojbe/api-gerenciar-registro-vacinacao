@@ -120,7 +120,7 @@ public class RegistroVacinacaoService {
                 return ResponseEntity.badRequest().body(menssagemErro);
             }
         }
-        return ResponseEntity.ok().body(registroVacinacao);
+        return ResponseEntity.created(null).body(registroVacinacao);
     }
 
     public ResponseEntity<Map<String, RegistroVacinacao>> atualizarPorId(String id, RegistroVacinacao novosDadosDoRegistroVacinacao) {
