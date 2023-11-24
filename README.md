@@ -59,11 +59,10 @@ GET /api/vacinacao/obter/{id} - Retorna dados de apenas um registro de uma vacin
 POST /api/vacinacao/cadastrar - Registra uma nova vacinação.
 Exemplo do Corpo JSON:
 {
-    "dataVacinacao": "2025-12-31",
-    "idPaciente": "653c422de542ce50230e7c9c",
-    "idVacina": "6529f2fe91cd2c0970b33adc",
-    "dose": 1,
-    "cpfProfisionalSaude": "81111789053"
+"idPaciente": "655fedfc10ef5169fe78208b",
+"idVacina": "6560fdbb2fd41b38b4af79b0",
+"cpfProfisionalSaude": "23671044098",
+"dataVacinacao": "2023-11-24"
 }
 
 
