@@ -123,13 +123,13 @@ public class RegistroVacinacaoController {
         return d;
     }
     @PutMapping("/editar/{id}")
-    public ResponseEntity<Map<String,RegistroVacinacao>> atualizarPorId(@RequestBody @Valid RegistroVacinacao novosDadosDoPRegistroVacinacao, @PathVariable String id) {
+    public ResponseEntity<?> atualizarPorId(@RequestBody @Valid RegistroVacinacao novosDadosDoPRegistroVacinacao, @PathVariable String id) {
         Optional<RegistroVacinacao> registroVacinacao = registroVacinacaoService.findById(id);
         novosDadosDoPRegistroVacinacao.setDataProximaVacinacao(GetDataPersonalizadaProximaVacinacao(novosDadosDoPRegistroVacinacao.getDosesEspecificadas(), novosDadosDoPRegistroVacinacao.getDataVacinacao()));
         if (registroVacinacao.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        ResponseEntity<Map<String,RegistroVacinacao>> responseRegistroVacinacao = registroVacinacaoService.atualizarPorId(id, novosDadosDoPRegistroVacinacao);
+        ResponseEntity<?> responseRegistroVacinacao = registroVacinacaoService.atualizarPorId(id, novosDadosDoPRegistroVacinacao);
 
         return responseRegistroVacinacao;
     }

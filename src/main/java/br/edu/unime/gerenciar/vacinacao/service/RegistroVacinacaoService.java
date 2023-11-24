@@ -123,11 +123,11 @@ public class RegistroVacinacaoService {
         return ResponseEntity.created(null).body(registroVacinacao);
     }
 
-    public ResponseEntity<Map<String, RegistroVacinacao>> atualizarPorId(String id, RegistroVacinacao novosDadosDoRegistroVacinacao) {
+    public ResponseEntity<?> atualizarPorId(String id, RegistroVacinacao novosDadosDoRegistroVacinacao) {
         Optional<RegistroVacinacao> registroVacinacao = findById(id);
 
         List<RegistroVacinacao> vacinacoesDoPaciente = findByIdPaciente(registroVacinacao.get().getIdPaciente());
-
+String msg= "";
         RegistroVacinacao registroAtual = new RegistroVacinacao();
         Map<String, RegistroVacinacao> response = new HashMap();
         for (RegistroVacinacao vacinacao : vacinacoesDoPaciente) {
@@ -147,16 +147,15 @@ public class RegistroVacinacaoService {
             novoPaciente.setEstado(novosDadosDoRegistroVacinacao.getEstado());
 
             registroVacinacaoRepository.save(novoPaciente);
-            response.put("Atualizado com sucesso!", (RegistroVacinacao) novoPaciente);
-            return ResponseEntity.ok().body(response);
+            return ResponseEntity.ok().body(novoPaciente);
         }
-        response.put("Só é possivel editar o ultimo registro de vacianação.", (RegistroVacinacao) novosDadosDoRegistroVacinacao);
+        msg = ("Só é possivel editar o ultimo registro de vacianação.");
         return ResponseEntity.badRequest().body(response);
     }
 
     public ResponseEntity<Map<String, RegistroVacinacao>> remove(String id) {
         Optional<RegistroVacinacao> registroVacina = findById(id);
-
+        String msg = "";
         List<RegistroVacinacao> vacinacoesDoPaciente = findByIdPaciente(registroVacina.get().getIdPaciente());
         RegistroVacinacao registroAtual = new RegistroVacinacao();
         Map<String, RegistroVacinacao> response = new HashMap();
@@ -177,10 +176,10 @@ public class RegistroVacinacaoService {
 
         if (registroVacina.isPresent() && registroAtual.getId().equals(id)) {
             registroVacina.ifPresent(value -> registroVacinacaoRepository.delete(value));
-            response.put("Registro Excluido com sucesso!", (RegistroVacinacao) registroASerExcluido);
+            msg = "Registro Excluido com sucesso!";
             return ResponseEntity.ok().body(response);
         }
-        response.put("Só é permitido apenas a exclusão do ultimo registro.", (RegistroVacinacao) registroASerExcluido);
+        msg = ("Só é permitido apenas a exclusão do ultimo registro.";
         return ResponseEntity.badRequest().body(response);
     }
 
