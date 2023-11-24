@@ -78,14 +78,13 @@ public class RegistroVacinacaoController {
         }
 
         return ResponseEntity.ok().body(registroVacinacao).getBody();
-        //return registroVacinacao;
     }
     Date GetDataProximaVacinacao(int dias){
         Date d = new Date();
         d.setDate(d.getDate() + dias);
         return d;
     }
-    @PostMapping("/cadastrar")
+    @PostMapping
     public ResponseEntity<?> inserir(@RequestBody @Valid RegistroVacinacaoDTO registroVacinacaoDTO) throws Exception {
         RegistroVacinacao registroVacinacao = new RegistroVacinacao(registroVacinacaoDTO);
         Date dataAtual = new Date();
@@ -124,7 +123,7 @@ public class RegistroVacinacaoController {
         return d;
     }
     @PutMapping("/editar/{id}")
-    public ResponseEntity<Map<String,RegistroVacinacao>> atualizarPorId(@RequestBody RegistroVacinacao novosDadosDoPRegistroVacinacao, @PathVariable String id) {
+    public ResponseEntity<Map<String,RegistroVacinacao>> atualizarPorId(@RequestBody @Valid RegistroVacinacao novosDadosDoPRegistroVacinacao, @PathVariable String id) {
         Optional<RegistroVacinacao> registroVacinacao = registroVacinacaoService.findById(id);
         novosDadosDoPRegistroVacinacao.setDataProximaVacinacao(GetDataPersonalizadaProximaVacinacao(novosDadosDoPRegistroVacinacao.getDosesEspecificadas(), novosDadosDoPRegistroVacinacao.getDataVacinacao()));
         if (registroVacinacao.isEmpty()) {
