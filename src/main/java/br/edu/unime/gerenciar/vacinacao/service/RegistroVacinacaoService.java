@@ -238,11 +238,11 @@ public class RegistroVacinacaoService {
         return todosRegistrosRetorno;
     }
 
-    public ResponseEntity<Map<String, Integer>> totalVacinasAplicadas(String estado, String fabricante) {
+    public ResponseEntity<?> totalVacinasAplicadas(String estado, String fabricante) {
         Map<String, Integer> response = new HashMap();
         List<RegistroVacinacao> todosRegistros = registroVacinacaoRepository.findAll();
         List<RegistroVacinacao> todosRegistrosRetorno = new ArrayList<>();
-
+String msg = "";
         if (estado.isEmpty() && fabricante.isEmpty()) {
             response.put("total_vacinas_aplicadas", (int) registroVacinacaoRepository.count());
             return ResponseEntity.ok(response);
@@ -250,28 +250,28 @@ public class RegistroVacinacaoService {
 
         todosRegistrosRetorno = filtrarPorEstadoEFabricante(estado, fabricante, todosRegistros);
         if (!todosRegistrosRetorno.isEmpty()) {
-            response.put("total_vacinas_aplicadas_no_esatado_" + estado + "_por_fabricante_" + fabricante, (int) todosRegistrosRetorno.size());
+            response.put("total_vacinas_aplicadas", (int) todosRegistrosRetorno.size());
             return ResponseEntity.ok(response);
         }
 
         todosRegistrosRetorno = filtrarPorEstado(estado, fabricante, todosRegistros);
         if (!todosRegistrosRetorno.isEmpty()) {
-            response.put("total_vacinas_aplicadas_no_esatado_" + estado, (int) todosRegistrosRetorno.size());
+            response.put("total_vacinas_aplicadas", (int) todosRegistrosRetorno.size());
             return ResponseEntity.ok(response);
         }
 
         todosRegistrosRetorno = filtrarPorFabricante(fabricante, estado, todosRegistros);
         if (!todosRegistrosRetorno.isEmpty()) {
-            response.put("total_vacinas_aplicadas_desse_fabricante_" + fabricante, (int) todosRegistrosRetorno.size());
+            response.put("total_vacinas_aplicadas", (int) todosRegistrosRetorno.size());
             return ResponseEntity.ok(response);
         }
         if (estado.isEmpty() && estado.isEmpty()) {
-            response.put("Nenhum registro de vacinação encontrado", (int) 0);
+            msg = ("Nenhum registro de vacinação encontrado");
             return ResponseEntity.ok(response);
         }
 
-        response.put("Nenhum registro de vacinação encontrado para o filtro: " + (!estado.isEmpty() ? "estado: " + estado : "") + " " + (!fabricante.isEmpty() ? "fabricante: " + fabricante : ""), (int) 0);
-        return ResponseEntity.ok(response);
+        msg = ("Nenhum registro de vacinação encontrado para o filtro: " + (!estado.isEmpty() ? "estado: " + estado : "") + " " + (!fabricante.isEmpty() ? "fabricante: " + fabricante : ""));
+        return ResponseEntity.ok(msg);
 
     }
 
@@ -296,20 +296,20 @@ public class RegistroVacinacaoService {
 
         if (pacientesRetorno.isEmpty()){
             if (estado.isEmpty()){
-                response.put("Nenhum paciente com Vacina atrasada", (Integer) 0);
+                response.put("paciente_vacina_atrasado", (Integer) 0);
                 return ResponseEntity.ok(response);
             }else{
-                response.put("Nenhum paciente com Vacina atrasada no estado " + estado, (Integer) 0);
+                response.put("paciente_vacina_atrasado", (Integer) 0);
                 return ResponseEntity.ok(response);
             }
 
         }
         if (!estado.isEmpty()){
-            response.put("Total de pacientes com vacina atrasada no estado " + estado, (Integer) pacientesRetorno.size());
+            response.put("paciente_vacina_atrasado", (Integer) pacientesRetorno.size());
             return ResponseEntity.ok(response);
         }
 
-        response.put("Total de pacientes com vacina atrasada", (Integer) pacientesRetorno.size());
+        response.put("paciente_vacina_atrasado", (Integer) pacientesRetorno.size());
         return ResponseEntity.ok(response);
     }
 

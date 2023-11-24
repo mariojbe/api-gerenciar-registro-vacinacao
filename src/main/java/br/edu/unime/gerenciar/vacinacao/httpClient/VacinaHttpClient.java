@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(value = "vacina-client", url = "https://api-vacinas-bsi-f03cac251e91.herokuapp.com/api/vacinas")
 public interface VacinaHttpClient {
 
-    @GetMapping("/obter/{id}")
+    @GetMapping("/{id}")
     public Vacina obterVacinaPorId(@PathVariable("id") String id);
 
 }

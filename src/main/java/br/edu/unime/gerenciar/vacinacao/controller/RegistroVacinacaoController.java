@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +89,12 @@ public class RegistroVacinacaoController {
     public ResponseEntity<?> inserir(@RequestBody @Valid RegistroVacinacaoDTO registroVacinacaoDTO) throws Exception {
         RegistroVacinacao registroVacinacao = new RegistroVacinacao(registroVacinacaoDTO);
         Date dataAtual = new Date();
-
+        if(registroVacinacao.getDataVacinacao() != null){
+            if(registroVacinacao.getDataVacinacao().after(dataAtual)){
+                String menssagemErro ="A Data de vacinação não pode ser futura.";
+                return ResponseEntity.badRequest().body(menssagemErro);
+            }
+        }
         try {
             Paciente paciente = pacienteHttpClient.obterPacientePorId(registroVacinacaoDTO.getIdPaciente());
             Vacina vacina = vacinaHttpClient.obterVacinaPorId(registroVacinacaoDTO.getIdVacina());
@@ -100,7 +106,7 @@ public class RegistroVacinacaoController {
             registroVacinacao.setIdVacina(vacina.getId());
             registroVacinacao.setProfissionalSaude(profissionalSaude);
             registroVacinacao.setDataProximaVacinacao(GetDataProximaVacinacao(vacina.getIntervaloEntreDoses()));
-            registroVacinacao.setDataVacinacao(dataAtual);
+            registroVacinacao.setDataVacinacao(registroVacinacao.getDataVacinacao());
             registroVacinacao.setDosesEspecificadas(vacina.getDoses());
             registroVacinacao.setEstado(registroVacinacao.getEstado());
             registroVacinacao.setNomePaciente(paciente.getNome());
@@ -141,7 +147,7 @@ public class RegistroVacinacaoController {
     }
 
     @GetMapping("/vacinas-aplicadas")
-    public ResponseEntity<Map<String, Integer>> getTotalVacinasAplicadas(@RequestParam("estado") String estado, @RequestParam("fabricante") String fabricante) {
+    public ResponseEntity<?> getTotalVacinasAplicadas(@RequestParam("estado") String estado, @RequestParam("fabricante") String fabricante) {
         return registroVacinacaoService.totalVacinasAplicadas(estado, fabricante);
     }
 

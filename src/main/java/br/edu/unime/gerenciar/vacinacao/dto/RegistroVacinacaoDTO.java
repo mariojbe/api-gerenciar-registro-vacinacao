@@ -11,7 +11,6 @@ import java.util.Date;
 @AllArgsConstructor //cria construtor com todos argumentos
 @NoArgsConstructor //cria construtor sem argumentos
 public class RegistroVacinacaoDTO {
-
     private Date dataVacinacao;
     private String idPaciente;
     private String idVacina;

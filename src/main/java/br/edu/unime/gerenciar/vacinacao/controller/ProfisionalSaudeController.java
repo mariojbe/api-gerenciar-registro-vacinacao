@@ -48,7 +48,6 @@ public class ProfisionalSaudeController {
         if (profissionalSaude.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-
         return ResponseEntity.ok().body(profissionalSaude.get());
     }
 

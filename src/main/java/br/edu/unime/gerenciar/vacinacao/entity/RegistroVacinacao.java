@@ -22,7 +22,7 @@ public class RegistroVacinacao {
     private String id;
     @NotNull
     @Past // deve ser obrigatorio e a data deve ser atual
-    private Date dataVacinacao;
+    private Date dataVacinacao = datavacinacao();
     private String idPaciente;
     private String nomePaciente;
     private String nomeVacina;
@@ -36,6 +36,10 @@ public class RegistroVacinacao {
 
     private ProfissionalSaude profissionalSaude;
 
+
+    Date datavacinacao(){
+        return dataVacinacao != null? dataVacinacao : new Date();
+    }
     public RegistroVacinacao(RegistroVacinacaoDTO registroVacinacaoDTO) {
         setDataVacinacao(registroVacinacaoDTO.getDataVacinacao());
         setIdPaciente(registroVacinacaoDTO.getIdPaciente());
