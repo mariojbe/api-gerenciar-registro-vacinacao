@@ -77,7 +77,6 @@ public class RegistroVacinacaoController {
         }
 
         return ResponseEntity.ok().body(registroVacinacao).getBody();
-        //return registroVacinacao;
     }
     Date GetDataProximaVacinacao(int dias){
         Date d = new Date();
