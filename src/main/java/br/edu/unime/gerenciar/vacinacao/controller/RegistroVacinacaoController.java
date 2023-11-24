@@ -84,7 +84,7 @@ public class RegistroVacinacaoController {
         d.setDate(d.getDate() + dias);
         return d;
     }
-    @PostMapping
+    @PostMapping("/cadastrar")
     public ResponseEntity<?> inserir(@RequestBody @Valid RegistroVacinacaoDTO registroVacinacaoDTO) throws Exception {
         RegistroVacinacao registroVacinacao = new RegistroVacinacao(registroVacinacaoDTO);
         Date dataAtual = new Date();

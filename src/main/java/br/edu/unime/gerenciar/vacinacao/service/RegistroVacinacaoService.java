@@ -274,7 +274,7 @@ String msg = "";
 
     }
 
-    public ResponseEntity<Map<String, Integer>> pacientesComDosesAtrasadas(String estado) {
+    public ResponseEntity<?> pacientesComDosesAtrasadas(String estado) {
         Date hoje = new Date();
         Map<String, Integer> response = new HashMap();
         List<RegistroVacinacao> todosRegistros = registroVacinacaoRepository.findAll();
