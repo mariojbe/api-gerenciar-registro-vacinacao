@@ -53,14 +53,14 @@ public class ProfisionalSaudeController {
     }
 
 
-    @PostMapping("/cadastrar")
+    @PostMapping
     public ResponseEntity<ProfissionalSaude> inserir(@RequestBody @Valid ProfissionalSaude profissionalSaude) {
         profissionalSaudeService.inserir(profissionalSaude);
         return ResponseEntity.created(null).body(profissionalSaude);
     }
 
-    @PutMapping("/editar/{id}")
-    public ResponseEntity<ProfissionalSaude> atualizarPorId(@RequestBody ProfissionalSaude
+    @PutMapping("{id}")
+    public ResponseEntity<ProfissionalSaude> atualizarPorId(@RequestBody @Valid ProfissionalSaude
                                                                     novosDadosDoProfissionalSaude, @PathVariable String id) {
         Optional<ProfissionalSaude> profissionalSaude = profissionalSaudeService.findById(id);
 
@@ -72,7 +72,7 @@ public class ProfisionalSaudeController {
         return ResponseEntity.ok().body(responseVacina);
     }
 
-    @DeleteMapping("/remover/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<ProfissionalSaude> remover(@PathVariable String id) {
         Optional<ProfissionalSaude> profissionalSaude = profissionalSaudeService.findById(id);
 
