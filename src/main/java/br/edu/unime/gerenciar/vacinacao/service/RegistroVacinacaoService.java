@@ -179,7 +179,7 @@ String msg= "";
             msg = "Registro Excluido com sucesso!";
             return ResponseEntity.ok().body(response);
         }
-        msg = ("Só é permitido apenas a exclusão do ultimo registro.";
+        msg = "Só é permitido apenas a exclusão do ultimo registro.";
         return ResponseEntity.badRequest().body(response);
     }
 
