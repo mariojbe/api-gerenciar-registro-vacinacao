@@ -153,7 +153,7 @@ String msg= "";
         return ResponseEntity.badRequest().body(response);
     }
 
-    public ResponseEntity<Map<String, RegistroVacinacao>> remove(String id) {
+    public ResponseEntity<?> remove(String id) {
         Optional<RegistroVacinacao> registroVacina = findById(id);
         String msg = "";
         List<RegistroVacinacao> vacinacoesDoPaciente = findByIdPaciente(registroVacina.get().getIdPaciente());

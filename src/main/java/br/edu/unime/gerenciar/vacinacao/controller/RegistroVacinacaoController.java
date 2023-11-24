@@ -135,7 +135,7 @@ public class RegistroVacinacaoController {
     }
 
     @DeleteMapping("/remover/{id}")
-    public ResponseEntity<Map<String, RegistroVacinacao>> remover(@PathVariable String id) {
+    public ResponseEntity<?> remover(@PathVariable String id) {
         Optional<RegistroVacinacao> registroVacinacao = registroVacinacaoService.findById(id);
 
         if (registroVacinacao.isEmpty()) {
