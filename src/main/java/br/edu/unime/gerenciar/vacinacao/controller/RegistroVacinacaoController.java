@@ -151,7 +151,7 @@ public class RegistroVacinacaoController {
     }
 
     @GetMapping("/pacientes_dose_atrasada")
-    public ResponseEntity<Map<String, Integer>> getPacienteComDosesAtrasadas(@RequestParam("estado") String estado) {
+    public ResponseEntity<?> getPacienteComDosesAtrasadas(@RequestParam("estado") String estado) {
         return registroVacinacaoService.pacientesComDosesAtrasadas(estado);
     }
     
